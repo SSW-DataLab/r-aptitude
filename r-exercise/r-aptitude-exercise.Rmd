@@ -1,0 +1,80 @@
+---
+title: "R Aptitude Exercise"
+author: "[Name]"
+date: "[Date]"
+output: word_document
+---
+
+# Directions/Background
+
+[Put some background information about the data here, for context]
+
+# Libraries
+
+**Document which libraries you use here.**
+
+```{r}
+
+```
+
+# Step 1: Load the data
+
+**Load the demographics.xlsx and the services.csv files into two objects called "demo" and "serv," respectively. Show how you load the data, and answer the following questions:**
+
+A. How many rows are in the demographics dataset? How many columns?
+
+B. How many rows are in the services dataset? How many columns?
+
+```{r}
+
+```
+
+# Step 2: Describe the data
+
+**Show any code you write to answer the following questions:**
+
+A. How many different counties are represented by the youths in this data?
+
+B. What percentage of youths are male? Female?
+
+C. What combined percentage of youths are black or multi-racial?
+
+D. Which column in the "serv" dataframe has the most missing values?
+
+```{r}
+
+```
+
+# Step 3: Merge the datasets
+
+**Show how you merge the dataframes, and answer the following question:**
+
+A. How many rows are in the merged dataset? How many columns?
+
+```{r}
+
+```
+
+# Step 4: Calculate new measures
+
+**Calculate two new columns in the merged dataframe: one that contains the duration of each placement (the difference between the event end and start dates), and one that contains the ages of youths at the time of their removal from the home (the difference between removal date and birth date). Show how you calculate these new variables, and answer the following questions:**
+
+A. What is the average age of youths at the time of removal?
+
+B. Which county has the longest average duration of placements? What is that average duration?
+
+c. What is the most common placement type for youths who identify as white? What is that number of placements?
+
+```{r}
+
+```
+
+# Step 5: Create a plot
+
+**Show the code you use to generate the following plots:**
+
+A. Create a plot which shows any differences, by three racial groups (black, white, other), in the distribution of ages of youths at the time of their first placement. 
+
+```{r}
+
+```

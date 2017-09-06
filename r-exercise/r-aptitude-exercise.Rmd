@@ -14,7 +14,8 @@ output: word_document
 **Document which libraries you use here.**
 
 ```{r}
-
+library(tidyverse)
+library(readxl)
 ```
 
 # Step 1: Load the data
@@ -26,7 +27,16 @@ A. How many rows are in the demographics dataset? How many columns?
 B. How many rows are in the services dataset? How many columns?
 
 ```{r}
+# A
+demo <- read_xlsx("demographics.xlsx")
+str(demo)
+nrow(demo)
+ncol(demo)
 
+# B
+serv <- read.csv("services.csv")
+nrow(serv)
+ncol(serv)
 ```
 
 # Step 2: Describe the data
@@ -42,7 +52,20 @@ C. What combined percentage of youths are black or multi-racial?
 D. Which column in the "serv" dataframe has the most missing values?
 
 ```{r}
+# A
+length(unique(demo$county))
 
+# B
+nrow(demo[demo$sex == "male",])/nrow(demo)
+
+# C
+nrow(demo[demo$race == "black" | demo$race == "multi-racial",])/nrow(demo)
+
+# D
+apply(serv, 2, function(x){
+  sum(is.na(x))
+}) %>%
+  which.max()
 ```
 
 # Step 3: Merge the datasets
@@ -52,7 +75,11 @@ D. Which column in the "serv" dataframe has the most missing values?
 A. How many rows are in the merged dataset? How many columns?
 
 ```{r}
-
+serv_merged <- merge(serv, demo,
+                     by.x = "id_youth",
+                     by.y = "id")
+nrow(serv_merged)
+ncol(serv_merged)
 ```
 
 # Step 4: Calculate new measures
@@ -67,6 +94,30 @@ c. What is the most common placement type for youths who identify as white? What
 
 ```{r}
 
+serv_merged <- serv_merged %>%
+  mutate(
+    duration = as.Date(event_end) - as.Date(event_start),
+    removal_age = as.numeric(as.Date(removal_date) - as.Date(birth_date))/365.242
+  )
+
+# A
+serv_merged %>%
+  group_by(id_youth) %>%
+  summarize(removal_age = mean(removal_age)) %>%
+  summarize(average_removal_age = mean(removal_age))
+
+# B
+serv_merged %>%
+  group_by(county) %>%
+  summarize(average_duration = mean(duration, na.rm = T)) %>%
+  filter(average_duration == max(average_duration))
+
+# C
+serv_merged %>%
+  filter(race == "white") %>%
+  group_by(livingarrangedesc) %>%
+  summarize(count = n()) %>%
+  filter(count == max(count))
 ```
 
 # Step 5: Create a plot
@@ -76,5 +127,11 @@ c. What is the most common placement type for youths who identify as white? What
 A. Create a plot which shows any differences, by three racial groups (black, white, other), in the distribution of ages of youths at the time of their first placement. 
 
 ```{r}
+serv_merged$race[serv_merged$race != "white" & serv_merged$race != "black"] <- "other"
 
+plot <- ggplot(data = serv_merged,
+               aes(x = race, y = removal_age))
+
+plot + geom_boxplot(aes(color = race), outlier.shape = NA, size = 1.2) + 
+  ylim(0, 20)
 ```
